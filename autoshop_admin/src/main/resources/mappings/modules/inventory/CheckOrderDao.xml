@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.inventory.dao.CheckOrderDao">
+	<resultMap type="com.zhilai.master.modules.inventory.entity.CheckOrder" id="checkOrderResultMap">
+		<id property="logid" column="logid" />
+		<result property="order_id" column="order_id" />
+		<result property="torder_id" column="torder_id" />
+		<result property="corp_id" column="corp_id" />
+		<result property="corp_name" column="corp_name" />
+		<result property="site_id" column="site_id" />
+		<result property="site_name" column="site_name" />
+		<result property="check_num" column="check_num" />
+		<result property="check_box" column="check_box" />
+		<result property="check_product" column="check_product" />
+		<result property="check_date" column="check_date" />
+		<result property="check_id" column="check_id" />
+		<result property="check_name" column="check_name" />
+		<result property="check_state" column="check_state" />
+		<result property="state_time" column="state_time" />
+		<result property="create_time" column="create_time" />
+		
+	</resultMap>
+
+ 	<select id="get" resultMap="checkOrderResultMap">
+		SELECT 
+			*
+		FROM as_check_order a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="checkOrderResultMap">
+		SELECT 
+			*
+		FROM as_check_order a WHERE 1=1 
+		<if test="check_name != null and check_name != ''">
+			AND a.check_name like 
+					<if test="dbName == 'oracle'">'%'||#{check_name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{check_name}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{check_name}, '%')</if>
+		</if>
+		<if test="site_id != null and site_id != ''">
+			AND a.site_id = #{site_id}
+		</if>
+		<if test="corp_id != null and corp_id != ''">
+			AND a.corp_id = #{corp_id}
+		</if>
+		<if test="beginTime != null and beginTime != '' ">
+			and a.check_date >= #{beginTime}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			and a.check_date <![CDATA[< ]]>DATE_ADD(#{endTime}, INTERVAL 1 DAY) 
+		</if>
+		ORDER BY a.state_time DESC
+	</select>
+	
+	<insert id="insert">
+		insert into
+		as_check_order(logid,order_id,torder_id,corp_id,corp_name,site_id,site_name,check_num,check_box,check_product,check_date,check_id,check_name,check_state,state_time,create_time)
+		values(#{logid},#{order_id},#{torder_id},#{corp_id},#{corp_name},#{site_id},#{site_name},#{check_num},#{check_box},#{check_product},#{check_date},#{check_id},#{check_name},#{check_state},#{state_time},#{create_time})
+	</insert>
+	
+	<insert id="update">
+		update as_check_order set check_num=#{check_num},check_box=#{check_box},check_product=#{check_product},check_date=#{check_date},check_id=#{check_id},check_name=#{check_name},check_state=#{check_state},state_time=#{state_time}
+		where logid=#{logid}
+	</insert>
+	
+	<delete id="delete">
+	    delete from as_check_order where order_id=#{order_id}
+	</delete>
+</mapper>

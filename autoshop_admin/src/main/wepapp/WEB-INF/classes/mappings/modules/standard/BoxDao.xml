@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.standard.dao.BoxDao">
+ 	<resultMap type="com.zhilai.master.modules.standard.entity.Box" id="BoxResultMap">
+ 		<id property="logid" column="logid"/>
+ 		<result property="site_id" column="site_id" />
+ 		<result property="site_name" column="site_name" />
+ 		<result property="cabinet_id" column="cabinet_id" />
+ 		<result property="cabinet_type" column="cabinet_type" />
+ 		<result property="box_id" column="box_id" />
+ 		<result property="box_type" column="box_type" />
+ 		<result property="box_typeid" column="box_typeid" />
+ 		<result property="layer_type" column="layer_type" />
+ 		<result property="box_state" column="box_state" />
+ 		<result property="refresh_state" column="refresh_state" />
+ 		<result property="refresh_time" column="refresh_time" />
+ 		<result property="error_time" column="error_time" />
+ 		<result property="oper_time" column="oper_time" />
+ 		<result property="error_flag" column="error_flag" />
+ 		<result property="owner_id" column="owner_id" />
+ 		<result property="article_id" column="article_id" />
+ 	</resultMap>
+    
+	<select id="get" resultMap="BoxResultMap">
+		SELECT  *  FROM as_box WHERE  logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="BoxResultMap">
+		SELECT * FROM as_box where 1=1
+		<if test="site_id != null and site_id != ''">
+			AND site_id = #{site_id}
+		</if>
+		<if test="site_name != null and site_name != ''">
+			AND site_name  LIKE CONCAT('%',#{site_name}, '%')
+		</if>
+		<if test="box_typeid != null and box_typeid != ''">
+			AND box_typeid = #{box_typeid}
+		</if>
+		<if test="box_type != null and box_type != ''">
+			AND box_type  LIKE CONCAT('%',#{box_type}, '%')
+		</if>
+		<if test="box_state != null and box_state != ''">
+			AND box_state = #{box_state}
+		</if>
+		<if test="refresh_state != null and refresh_state != ''">
+			AND refresh_state = #{refresh_state}
+		</if>
+		<if test="owner_id != null and owner_id != ''">
+			AND owner_id = #{owner_id}
+		</if>
+		ORDER BY refresh_time desc
+	</select>
+
+	
+	<select id="findAllList" resultMap="BoxResultMap">
+		SELECT  *  FROM as_box ORDER BY refresh_time 
+	</select>
+	<select id="findBySiteId" parameterType="String" resultMap="BoxResultMap" >
+       select * from as_box where site_id=#{site_id} order by box_id  desc
+	</select>
+	<insert id="insert">
+			INSERT INTO as_box(logid,site_id,site_name,cabinet_id,cabinet_type,box_id,box_type,box_typeid,layer_type,box_state,
+			refresh_state,refresh_time,error_time,oper_time,error_flag,owner_id,article_id)
+			values(#{logid},#{site_id},#{site_name},#{cabinet_id},#{cabinet_type},#{box_id},#{box_type},#{box_typeid},#{layer_type},#{box_state},
+			#{refresh_state},#{refresh_time},#{error_time},#{oper_time},#{error_flag},#{owner_id},#{article_id})
+	</insert>
+	<update id="update">
+		update as_box set site_id=#{site_id},
+		site_name=#{site_name},cabinet_id=#{cabinet_id},cabinet_type=#{cabinet_type},box_id=#{box_id},box_type=#{box_type},box_typeid=#{box_typeid},layer_type=#{layer_type},
+		box_state=#{box_state},refresh_state=#{refresh_state},refresh_time=#{refresh_time},error_time=#{error_time},oper_time=#{oper_time},error_flag=#{error_flag}
+		,owner_id=#{owner_id},article_id=#{article_id}
+		where logid=#{logid}
+	</update>
+	
+	<delete id="delete">
+		delete from as_box where logid = #{logid}
+	</delete>
+	<delete id="deleteByCabinetId"> parameterType="com.zhilai.master.modules.standard.entity.Box"
+		DELETE FROM as_box where site_id=#{site_id} and cabinet_id=#{cabinet_id}  
+	</delete>
+</mapper>

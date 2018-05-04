@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.order.dao.OrderProductDao">
+	<resultMap type="com.zhilai.master.modules.order.entity.OrderProduct" id="orderProductResultMap">
+		<id property="logid" column="logid" />
+		<result property="prodetail_id" column="prodetail_id" />
+		<result property="corp_id" column="corp_id" />
+		<result property="corp_name" column="corp_name" />
+		<result property="order_id" column="order_id" />
+		<result property="torder_id" column="torder_id" />
+		<result property="product_id" column="product_id" />
+		<result property="product_name" column="product_name" />
+		<result property="productType_id" column="productType_id" />
+		<result property="productType_name" column="productType_name" />
+		<result property="brand_id" column="brand_id" />
+		<result property="brand_name" column="brand_name" />
+		<result property="bar_code" column="bar_code" />
+		<result property="normal_price" column="normal_price" />
+		<result property="sale_price" column="sale_price" />
+		<result property="sale_num" column="sale_num" />
+		<result property="alrecovery_num" column="alrecovery_num" />
+		<result property="sale_total" column="sale_total" />
+		<result property="create_time" column="create_time" />
+	</resultMap>
+	
+	 <select id="get" resultMap="orderProductResultMap">
+		SELECT 
+			*
+		FROM as_order_product a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="orderProductResultMap">
+		SELECT 
+			*
+		FROM as_order_product a WHERE 1=1 
+		<if test="order_id != null and order_id != ''">
+			AND a.order_id = #{order_id}
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+
+	<insert id="insert">
+		insert into
+		as_order_product(logid,prodetail_id,corp_id,corp_name,order_id,torder_id,product_id,product_name,productType_id,productType_name,brand_id,brand_name,bar_code,normal_price,sale_price,sale_num,alrecovery_num,sale_total,create_time)
+		values(#{logid},#{prodetail_id},#{corp_id},#{corp_name},#{order_id},#{torder_id},#{product_id},#{product_name},#{productType_id},#{productType_name},#{brand_id},#{brand_name},#{bar_code},#{normal_price},#{sale_price},#{sale_num},#{alrecovery_num},#{sale_total},#{create_time})
+	</insert>
+	
+	<insert id="update">
+		update as_order_product set torder_id=#{torder_id},product_id=#{product_id},product_name=#{product_name},productType_id=#{productType_id},productType_name=#{productType_name},brand_id=#{brand_id},brand_name=#{brand_name},bar_code=#{bar_code},normal_price=#{normal_price},sale_price=#{sale_price},sale_num=#{sale_num},alrecovery_num=#{alrecovery_num},sale_total=#{sale_total} where logid=#{logid}
+	</insert>
+	
+	<delete id="delete">
+	    delete from as_order_product where logid=#{logid}
+	</delete>
+</mapper>

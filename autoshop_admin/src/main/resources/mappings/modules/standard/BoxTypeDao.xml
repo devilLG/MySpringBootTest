@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.standard.dao.BoxTypeDao">
+ 	<resultMap type="com.zhilai.master.modules.standard.entity.BoxType" id="BoxTypeResultMap">
+ 		<id property="logid" column="logid"/>
+ 		<result property="corp_id" column="corp_id" />
+ 		<result property="type_id" column="type_id" />
+ 		<result property="type_name" column="type_name" />
+ 		<result property="fullname" column="fullname" />
+ 		<result property="size_length" column="size_length" />
+ 		<result property="size_width" column="size_width" />
+ 		<result property="size_height" column="size_height" />
+ 		<result property="size_level" column="size_level" />
+ 		<result property="exceed_type" column="exceed_type" />
+ 	</resultMap>
+    
+	<select id="get" resultMap="BoxTypeResultMap">
+		SELECT  *  FROM as_box_type WHERE  type_id = #{type_id}
+	</select>
+	
+	<select id="findList" resultMap="BoxTypeResultMap">
+		SELECT * FROM as_box_type where 1=1
+		<if test="type_id != null and type_id != ''">
+			AND type_id = #{type_id}
+		</if>
+		<if test="type_name != null and type_name != ''">
+			AND type_name  LIKE CONCAT('%',#{type_name}, '%')
+		</if>
+		ORDER BY type_id desc
+	</select>
+	
+	<select id="findOneByTypeName" resultMap="BoxTypeResultMap">
+		SELECT  *  FROM as_box_type WHERE type_name = #{type_name}
+	</select>
+
+	
+	<select id="findAllList" resultMap="BoxTypeResultMap">
+		SELECT  *  FROM as_box_type ORDER BY type_id 
+	</select>
+	<insert id="insert">
+			INSERT INTO as_box_type(logid,type_id,corp_id,type_name,fullname,size_length,
+			size_width,size_height,size_level,exceed_type)
+			values(#{logid},#{type_id},#{corp_id},#{type_name},#{fullname},#{size_length},
+			#{size_width},#{size_height},#{size_level},#{exceed_type})
+	</insert>
+	<update id="update">
+		update as_box_type set corp_id=#{corp_id},
+		type_name=#{type_name},fullname=#{fullname},size_length=#{size_length},size_width=#{size_width},
+		size_height=#{size_height},size_level=#{size_level},exceed_type=#{exceed_type}	
+		where type_id=#{type_id}
+	</update>
+	
+	<delete id="delete">
+		delete from as_box_type where type_id = #{type_id}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.trade.dao.PartnerIPDao">
+	<resultMap type="com.zhilai.master.modules.trade.entity.PartnerIP" id="PartnerIPResultMap">
+		<id property="logid" column="logid" />
+		<result property="corp_id" column="corp_id" />
+		<result property="corp_name" column="corp_name" />
+		<result property="auth_name" column="auth_name" />
+		<result property="addr_ip" column="addr_ip" />
+		<result property="addr_mac" column="addr_mac" />
+		<result property="auth_state" column="auth_state" />
+	</resultMap>
+
+	<select id="findList" parameterType="com.zhilai.master.modules.trade.entity.PartnerIP"
+		resultMap="PartnerIPResultMap">
+		select * from sys_partner_network t where 1=1
+		<if test="corp_name != null and corp_name != '' ">
+			AND t.corp_name like '%${corp_name}%'
+		</if>
+		<if test="auth_name != null and auth_name != '' ">
+			AND t.auth_name = #{auth_name}
+		</if>
+		<if test="addr_ip != null and addr_ip != '' ">
+			AND t.addr_ip = #{addr_ip}
+		</if>
+		<if test="addr_mac != null and addr_mac != '' ">
+			AND t.addr_mac = #{addr_mac}
+		</if>
+		<if test="auth_state != null and auth_state != '' ">
+			AND t.auth_state = #{auth_state}
+		</if>
+		order by t.logId
+	</select>
+	<insert id="insert" parameterType="com.zhilai.master.modules.trade.entity.PartnerIP">
+		insert into sys_partner_network
+		(logid,corp_id,corp_name,auth_name,addr_ip,addr_mac, auth_state)
+		values(#{logid},#{corp_id},#{corp_name},#{auth_name},#{addr_ip},#{addr_mac},#{auth_state});
+	</insert>
+	<delete id="delete" parameterType="String">
+		delete from sys_partner_network
+		where logid =#{logid}
+	</delete>
+	<delete id="deleteByCorpId" parameterType="String">
+		delete from sys_partner_network
+		where corp_id =#{corp_id}
+	</delete>
+	<delete id="deleteByIds" parameterType="com.zhilai.master.modules.trade.entity.PartnerIP">
+		delete from sys_partner_network
+		where logid in(${logid})
+	</delete>
+	<update id="update" parameterType="com.zhilai.master.modules.trade.entity.PartnerIP">
+		update sys_partner_network
+		set
+		corp_id = #{corp_id} ,
+		corp_name = #{corp_name} ,
+		auth_name = #{auth_name} ,
+		addr_ip = #{addr_ip} ,
+		addr_mac = #{addr_mac} ,
+		auth_state = #{auth_state}
+		where
+		logid = #{logid}
+	</update>
+	<select id="findOneById" parameterType="String" resultMap="PartnerIPResultMap">
+		select * from sys_partner_network where logid=#{logid}
+	</select>
+	<select id="findOneByCorpId" parameterType="String" resultMap="PartnerIPResultMap">
+		select * from sys_partner_network where corp_id=#{corp_id}
+	</select>
+</mapper> 
+

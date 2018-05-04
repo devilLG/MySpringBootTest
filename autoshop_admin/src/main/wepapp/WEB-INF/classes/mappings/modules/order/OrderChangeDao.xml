@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.order.dao.OrderChangeDao">
+	<resultMap type="com.zhilai.master.modules.order.entity.OrderChange" id="orderChangeResultMap">
+		<id property="logid" column="logid" />
+		<result property="change_id" column="change_id" />
+		<result property="corp_id" column="corp_id" />
+		<result property="order_id" column="order_id" />
+		<result property="torder_id" column="torder_id" />
+		<result property="bar_code" column="bar_code" />
+		<result property="oper_id" column="oper_id" />
+		<result property="oper_name" column="oper_name" />
+		<result property="site_id" column="site_id" />
+		<result property="site_name" column="site_name" />
+		<result property="oper_action" column="oper_action" />
+		<result property="oper_time" column="oper_time" />
+		<result property="oper_cont" column="oper_cont" />
+		<result property="create_time" column="create_time" />
+		<result property="poc_state" column="poc_state" />
+		<result property="poc_times" column="poc_times" />
+		<result property="poc_result" column="poc_result" />
+	</resultMap>
+	
+	<select id="get" resultMap="orderChangeResultMap">
+		SELECT 
+			*
+		FROM as_order_change a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="orderChangeResultMap">
+		SELECT 
+			*
+		FROM as_order_change a WHERE 1=1 
+		<if test="order_id != null and order_id != ''">
+			AND a.order_id like 
+					<if test="dbName == 'oracle'">'%'||#{order_id}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{order_id}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{order_id}, '%')</if>
+		</if>
+		<if test="site_id != null and site_id != ''">
+			AND a.site_id = #{site_id}
+		</if>
+		<if test="oper_action != null and oper_action != ''">
+			AND a.oper_action = #{oper_action}
+		</if>
+		<if test="beginTime != null and beginTime != '' ">
+			and oper_time >= CONCAT(#{beginTime},' 00:00:00')
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			and oper_time <![CDATA[< ]]>DATE_ADD(CONCAT(#{endTime},' 00:00:00'), INTERVAL 1 DAY) 
+		</if>
+		<if test="corp_id != null and corp_id != ''">
+			AND a.corp_id = #{corp_id}
+		</if>
+		ORDER BY a.oper_time DESC
+	</select>
+
+	<insert id="insert">
+		insert into as_order_change(logid,change_id,corp_id,order_id,torder_id,bar_code,oper_id,oper_name,site_id,site_name,oper_action,oper_time,oper_cont,create_time,poc_state,poc_times,poc_result)
+		values(#{logid},#{change_id},#{corp_id},#{order_id},#{torder_id},#{bar_code},#{oper_id},#{oper_name},#{site_id},#{site_name},#{oper_action},#{oper_time},#{oper_cont},#{create_time},#{poc_state},#{poc_times},#{poc_result})
+	</insert>
+</mapper> 
+

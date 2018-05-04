@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.inventory.dao.InventoryGoodsDao">
+	<resultMap type="com.zhilai.master.modules.inventory.entity.InventoryGoods" id="inventoryGoodsResultMap">
+		<id property="logid" column="logid" />
+		<result property="invengoods_id" column="invengoods_id" />
+		<result property="corp_id" column="corp_id" />
+		<result property="corp_name" column="corp_name" />
+		<result property="site_id" column="site_id" />
+		<result property="site_name" column="site_name" />
+		<result property="cabinet_id" column="cabinet_id" />
+		<result property="cloumn_id" column="cloumn_id" />
+		<result property="layer_num" column="layer_num" />
+		<result property="box_id" column="box_id" />
+		<result property="temper_type" column="temper_type" />
+		<result property="product_id" column="product_id" />
+		<result property="product_name" column="product_name" />
+		<result property="bar_code" column="bar_code" />
+		<result property="inventory_max" column="inventory_max" />
+		<result property="inventory_total" column="inventory_total" />
+		<result property="inventory_num" column="inventory_num" />
+		<result property="inventory_transit" column="inventory_transit" />
+		<result property="overdue_num" column="overdue_num" />
+		<result property="state_time" column="state_time" />
+		<result property="cur_state" column="cur_state" />
+		<result property="inventory_state" column="inventory_state" />
+		<result property="warn_num" column="warn_num" />
+		<result property="overdue_time" column="overdue_time" />
+		<result property="is_overdue" column="is_overdue" />
+		<result property="down_state" column="down_state" />
+		<result property="down_time" column="down_time" />
+		<result property="create_time" column="create_time" />
+		<result property="inventory_recovery" column="inventory_recovery" />
+	</resultMap>
+	
+	<select id="get" resultMap="inventoryGoodsResultMap">
+		SELECT 
+			*
+		FROM as_inventory_goods a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="inventoryGoodsResultMap">
+		SELECT 
+			*
+		FROM as_inventory_goods a WHERE 1=1 
+		<if test="product_name != null and product_name != ''">
+			AND a.product_name like 
+					<if test="dbName == 'oracle'">'%'||#{product_name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{product_name}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{product_name}, '%')</if>
+		</if>
+		<if test="bar_code != null and bar_code != ''">
+			AND a.bar_code like 
+					<if test="dbName == 'oracle'">'%'||#{bar_code}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bar_code}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{bar_code}, '%')</if>
+		</if>
+		<if test="site_id != null and site_id != ''">
+			AND a.site_id = #{site_id}
+		</if>
+		<if test="product_id != null and product_id != ''">
+			AND a.product_id = #{product_id}
+		</if>
+		<if test="box_id != null and box_id != ''">
+			AND a.box_id = #{box_id}
+		</if>
+		<if test="corp_id != null and corp_id != ''">
+			AND a.corp_id = #{corp_id}
+		</if>
+		<if test="inventory_state != null and inventory_state != ''">
+			AND a.inventory_state = #{inventory_state}
+		</if>
+		<if test="type != null and type == 1">
+			AND a.inventory_transit = 0
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<select id="findExist" resultMap="inventoryGoodsResultMap" >
+       select * from as_inventory_goods where site_id=#{site_id} and box_id=#{box_id}
+	</select>
+	
+	<select id="findWarn" resultMap="inventoryGoodsResultMap">
+		select * from as_inventory_goods  where (inventory_num+inventory_transit) <![CDATA[<]]> warn_num and box_id != -1 
+		<if test="box_id != null and box_id != '' ">
+			and box_id = #{box_id} 
+		</if>
+		<if test="site_id != null and site_id != '' ">
+			and site_id = #{site_id} 
+		</if>
+		 order by warn_num-(inventory_num+inventory_transit) desc
+	</select>
+	
+	<select id="findWarnByInventoryState" resultMap="inventoryGoodsResultMap">
+		select * from as_inventory_goods where inventory_state = #{inventory_state} and corp_id = #{corp_id}
+	</select>
+
+	<insert id="insert">
+		insert into
+		as_inventory_goods(logid,invengoods_id,corp_id,corp_name,site_id,site_name,cabinet_id,cloumn_id,layer_num,box_id,temper_type,product_id,product_name,bar_code,inventory_max,inventory_total,inventory_num,inventory_transit,overdue_num,inventory_recovery,state_time,cur_state,inventory_state,warn_num,overdue_time,is_overdue,down_state,down_time,create_time)
+		values(#{logid},#{invengoods_id},#{corp_id},#{corp_name},#{site_id},#{site_name},#{cabinet_id},#{cloumn_id},#{layer_num},#{box_id},#{temper_type},#{product_id},#{product_name},#{bar_code},#{inventory_max},#{inventory_total},#{inventory_num},#{inventory_transit},#{overdue_num},#{inventory_recovery},#{state_time},#{cur_state},#{inventory_state},#{warn_num},#{overdue_time},#{is_overdue},#{down_state},#{down_time},#{create_time})
+	</insert>
+	
+	<update id="update">
+		update as_inventory_goods set product_id=#{product_id},product_name=#{product_name},bar_code=#{bar_code},inventory_max=#{inventory_max},inventory_total=#{inventory_total},inventory_num=#{inventory_num},inventory_transit=#{inventory_transit},overdue_num=#{overdue_num},inventory_recovery=#{inventory_recovery},warn_num=#{warn_num},overdue_time=#{overdue_time},create_time=#{create_time},is_overdue=#{is_overdue},inventory_state=#{inventory_state},state_time=#{state_time}
+		where logid=#{logid}
+	</update>
+	
+	<delete id="delete">
+	    delete from as_inventory_goods where logid=#{logid}
+	</delete>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.order.dao.OrderPayDao">
+ 	<resultMap type="com.zhilai.master.modules.order.entity.OrderPay" id="orderPayResultMap">
+ 		<id property="logid" column="logid" />
+ 		<result property="site_id" column="site_id" />
+		<result property="order_id" column="order_id" />
+		<result property="torder_id" column="torder_id" />
+		<result property="sale_total" column="sale_total" />
+		<result property="pay_type" column="pay_type" />
+		<result property="pay_state" column="pay_state" />
+		<result property="pay_overtime" column="pay_overtime" />
+		<result property="push_num" column="push_num" />
+		<result property="push_type" column="push_type" />
+		<result property="error_cont" column="error_cont" />
+		<result property="create_time" column="create_time" />
+		<result property="OutTradeNo" column="out_trade_no" />
+   </resultMap>
+   
+   <select id="get" resultMap="orderPayResultMap">
+		SELECT 
+			*
+		FROM as_order_pay a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="orderPayResultMap">
+		SELECT 
+			*
+		FROM as_order_pay a WHERE 1=1 
+		<if test="pay_state != null and pay_state != ''">
+			AND a.pay_state = #{pay_state}
+		</if>
+		<if test="pay_overtime != null and pay_overtime != '' ">
+			and pay_overtime <![CDATA[< ]]> #{pay_overtime}
+		</if>
+		<if test="push_type != null and push_type != ''">
+			AND a.push_type = #{push_type}
+		</if>
+		ORDER BY a.pay_overtime DESC 
+	</select>
+	
+	<select id="findPayOverdueList" parameterType="String" resultMap="orderPayResultMap">
+		select * from as_order_pay where pay_state='00' and pay_overtime <![CDATA[<= ]]> #{pay_overtime} and push_type='01'
+	</select>
+	
+	<insert id="update">
+		update as_order_pay set pay_state=#{pay_state},push_num=#{push_num},push_type=#{push_type},error_cont=#{error_cont} where logid=#{logid}
+	</insert>
+	
+ </mapper> 
+ 	

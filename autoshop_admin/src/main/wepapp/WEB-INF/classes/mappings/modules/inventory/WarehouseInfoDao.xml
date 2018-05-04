@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.inventory.dao.WarehouseInfoDao">
+	<resultMap type="com.zhilai.master.modules.inventory.entity.WarehouseInfo" id="warehouseInfoResultMap">
+		<id property="logid" column="logid" />
+		<result property="warehouse_id" column="warehouse_id" />
+		<result property="corp_id" column="corp_id" />
+		<result property="corp_name" column="corp_name" />
+		<result property="warehouse_name" column="warehouse_name" />
+		<result property="warehouse_code" column="warehouse_code" />
+		<result property="longitude" column="longitude" />
+		<result property="latitude" column="latitude" />
+		<result property="address" column="address" />
+		<result property="classify_total" column="classify_total" />
+		<result property="inventory_total" column="inventory_total" />
+		<result property="inventory_num" column="inventory_num" />
+		<result property="inventory_transit" column="inventory_transit" />
+		<result property="inventory_renum" column="inventory_renum" />
+		<result property="overdue_num" column="overdue_num" />
+		<result property="create_time" column="create_time" />
+	</resultMap>
+	
+	<select id="get" resultMap="warehouseInfoResultMap">
+		SELECT 
+			*
+		FROM as_warehouse_info a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="warehouseInfoResultMap">
+		SELECT 
+			*
+		FROM as_warehouse_info a WHERE 1=1 
+		<if test="corp_id != null and corp_id != ''">
+			AND a.corp_id = #{corp_id}
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<select id="findByCorpId" parameterType="String" resultMap="warehouseInfoResultMap">
+		SELECT * FROM as_warehouse_info a WHERE a.corp_id = #{corp_id}
+	</select>
+
+	<insert id="insert">
+		insert into
+		as_warehouse_info(logid,warehouse_id,corp_id,corp_name,warehouse_name,warehouse_code,longitude,latitude,address,classify_total,inventory_total,inventory_num,inventory_transit,inventory_renum,overdue_num,create_time)
+		values(#{logid},#{warehouse_id},#{corp_id},#{corp_name},#{warehouse_name},#{warehouse_code},#{longitude},#{latitude},#{address},#{classify_total},#{inventory_total},#{inventory_num},#{inventory_transit},#{inventory_renum},#{overdue_num},#{create_time})
+	</insert>
+	
+	<insert id="update">
+		update as_warehouse_info set warehouse_id=#{warehouse_id},corp_name=#{corp_name},warehouse_name=#{warehouse_name},warehouse_code=#{warehouse_code},longitude=#{longitude},latitude=#{latitude},address=#{address},classify_total=#{classify_total},inventory_total=#{inventory_total},inventory_num=#{inventory_num},inventory_transit=#{inventory_transit},inventory_renum=#{inventory_renum},overdue_num=#{overdue_num},create_time=#{create_time}
+        where logid=#{logid}
+	</insert>
+	
+	<delete id="delete">
+	    delete from as_warehouse_info where corp_id=#{corp_id}
+	</delete>
+</mapper>

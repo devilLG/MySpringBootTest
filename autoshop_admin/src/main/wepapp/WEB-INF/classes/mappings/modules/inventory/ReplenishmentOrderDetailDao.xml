@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.inventory.dao.ReplenishmentOrderDetailDao">
+	<resultMap type="com.zhilai.master.modules.inventory.entity.ReplenishmentOrderDetail" id="replenishmentOrderDetailResultMap">
+		<id property="logid" column="logid" />
+		<result property="detail_id" column="detail_id" />
+		<result property="order_id" column="order_id" />
+		<result property="corp_id" column="corp_id" />
+		<result property="corp_name" column="corp_name" />
+		<result property="site_id" column="site_id" />
+		<result property="site_name" column="site_name" />
+		<result property="box_id" column="box_id" />
+		<result property="product_id" column="product_id" />
+		<result property="product_name" column="product_name" />
+		<result property="surplus_num" column="surplus_num" />
+		<result property="replen_num" column="replen_num" />
+		<result property="sold_num" column="sold_num" />
+		<result property="overdue_num" column="overdue_num" />
+		<result property="replen_date" column="replen_date" />
+		<result property="invalid_date" column="invalid_date" />
+		<result property="cur_state" column="cur_state" />
+		<result property="state_time" column="state_time" />
+		<result property="create_time" column="create_time" />
+		<result property="down_state" column="down_state" />
+		<result property="down_time" column="down_time" />
+	</resultMap>
+
+	<select id="get" resultMap="replenishmentOrderDetailResultMap">
+		SELECT 
+			*
+		FROM as_replenishment_order_detail a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="replenishmentOrderDetailResultMap">
+		SELECT 
+			*
+		FROM as_replenishment_order_detail a WHERE 1=1 
+		<if test="order_id != null and order_id != ''">
+			AND a.order_id = #{order_id}
+		</if>
+		ORDER BY a.state_time DESC
+	</select>
+	
+	<select id="findProductOverdueList" parameterType="String" resultMap="replenishmentOrderDetailResultMap">
+		select * from as_replenishment_order_detail where invalid_date <![CDATA[<= ]]> #{invalid_date} and cur_state='2'
+	</select>
+
+	<insert id="insert">
+		insert into
+		as_replenishment_order_detail(logid,detail_id,order_id,corp_id,corp_name,site_id,site_name,box_id,product_id,product_name,surplus_num,replen_num,sold_num,overdue_num,replen_date,invalid_date,cur_state,state_time,create_time,down_state)
+		values(#{logid},#{detail_id},#{order_id},#{corp_id},#{corp_name},#{site_id},#{site_name},#{box_id},#{product_id},#{product_name},#{surplus_num},#{replen_num},#{sold_num},#{overdue_num},#{replen_date},#{invalid_date},#{cur_state},#{state_time},#{create_time},#{down_state})
+	</insert>
+	
+	<insert id="update">
+		update as_replenishment_order_detail set corp_name=#{corp_name},site_id=#{site_id},site_name=#{site_name},box_id=#{box_id},product_id=#{product_id},product_name=#{product_name},surplus_num=#{surplus_num},replen_num=#{replen_num},sold_num=#{sold_num},overdue_num=#{overdue_num},replen_date=#{replen_date},invalid_date=#{invalid_date},cur_state=#{cur_state},state_time=#{state_time},down_state=#{down_state},down_time=#{down_time}
+		where logid=#{logid}
+	</insert>
+	
+	<delete id="delete">
+	    delete from as_replenishment_order_detail where logid=#{logid}
+	</delete>
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.person.dao.SitePersonDao">
+ 	<resultMap type="com.zhilai.master.modules.person.entity.SitePerson" id="SitePersonResultMap">
+ 		<id property="logid" column="logid"/>
+ 		<result property="site_id" column="site_id" />
+ 		<result property="config_id" column="config_id" />
+ 		<result property="corp_id" column="corp_id" />
+ 		<result property="corp_name" column="corp_name" />
+ 		<result property="site_name" column="site_name" />
+ 		<result property="login_id" column="login_id" />
+ 		<result property="login_name" column="login_name" />
+ 		<result property="mobile" column="mobile" />
+ 		<result property="email" column="email" />
+ 		<result property="Emp_type" column="emp_type" />
+ 		<result property="Cur_state" column="cur_state" />
+ 		
+ 		<result property="down_state" column="down_state" />
+ 		<result property="down_time" column="down_time" />
+ 		<result property="create_time" column="create_time" />
+ 		<result property="notice_state" column="notice_state" />
+ 	</resultMap>
+    
+	<select id="get" resultMap="SitePersonResultMap">
+		SELECT  *  FROM as_site_person WHERE  logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="SitePersonResultMap">
+		SELECT * FROM as_site_person where 1=1
+		<if test="site_id != null and site_id != ''">
+			AND site_id = #{site_id}
+		</if>
+		<if test="corp_id != null and corp_id != ''">
+			AND corp_id = #{corp_id}
+		</if>
+		<if test="site_name != null and site_name != ''">
+			AND site_name  LIKE CONCAT('%',#{site_name}, '%')
+		</if>
+		<if test="dis_time != null and dis_time != ''">
+			AND dis_time = #{dis_time}
+		</if>
+		<if test="mobile != null and mobile != ''">
+			AND mobile = #{mobile}
+		</if>
+		<if test="email != null and email != ''">
+			AND email = #{email}
+		</if>
+		<if test="emp_type != null and emp_type != ''">
+			AND emp_type = #{emp_type}
+		</if>
+		<if test="down_state != null and down_state != ''">
+			AND down_state = #{down_state}
+		</if>
+		<if test="create_time != null and create_time != '' ">
+			AND create_time  <![CDATA[>= ]]>  #{create_time}
+		</if>
+		<if test="login_id != null and login_id != ''">
+			AND login_id like 
+					<if test="dbName == 'oracle'">'%'||#{login_id}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{login_id}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{login_id}, '%')</if>
+		</if>
+		<if test="login_name != null and login_name != ''">
+			AND login_name like 
+					<if test="dbName == 'oracle'">'%'||#{login_name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{login_name}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{login_name}, '%')</if>
+		</if>
+		<if test="notice_state != null and notice_state != '' ">
+			AND notice_state = #{notice_state}
+		</if>
+		<if test="Cur_state != null and Cur_state != '' ">
+			AND Cur_state = #{Cur_state}
+		</if>
+		ORDER BY create_time desc
+	</select>
+
+	
+	<select id="findAllList" resultMap="SitePersonResultMap">
+		SELECT  *  FROM as_site_person ORDER BY create_time 
+	</select>
+	<insert id="insert">
+			INSERT INTO as_site_person(logid,config_id,site_id,site_name,login_id,login_name,mobile,email,
+			emp_type,cur_state,down_state,down_time,create_time,corp_id,corp_name,notice_state)
+			values(#{logid},#{config_id},#{site_id},#{site_name},#{login_id},#{login_name},#{mobile},#{email},
+			#{Emp_type},#{Cur_state},#{down_state},#{down_time},#{create_time},#{corp_id},#{corp_name},#{notice_state})
+	</insert>
+	
+	<update id="update">
+		update as_site_person set site_id=#{site_id},config_id=#{config_id},
+		site_name=#{site_name},login_id=#{login_id},login_name=#{login_name},mobile=#{mobile},email=#{email},emp_type=#{Emp_type},
+		cur_state=#{Cur_state},down_state=#{down_state},down_time=#{down_time},create_time=#{create_time},corp_id=#{corp_id},corp_name=#{corp_name},notice_state=#{notice_state}	
+		where logid=#{logid}
+	</update>
+	
+	<delete id="delete">
+		delete from as_site_person where logid = #{logid}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.inventory.dao.BarterOrderDetailDao">
+	<resultMap type="com.zhilai.master.modules.inventory.entity.BarterOrderDetail" id="barterOrderDetailResultMap">
+		<id property="logid" column="logid" />
+		<result property="detail_id" column="detail_id" />
+		<result property="order_id" column="order_id" />
+		<result property="corp_id" column="corp_id" />
+		<result property="corp_name" column="corp_name" />
+		<result property="site_id" column="site_id" />
+		<result property="site_name" column="site_name" />
+		<result property="box_id" column="box_id" />
+		<result property="product_id" column="product_id" />
+		<result property="product_name" column="product_name" />
+		<result property="barter_num" column="barter_num" />
+		<result property="inventory_num" column="inventory_num" />
+		<result property="bproduct_id" column="bproduct_id" />
+		<result property="bproduct_name" column="bproduct_name" />
+		<result property="surplus_num" column="surplus_num" />
+		<result property="barter_date" column="barter_date" />
+		<result property="invalid_date" column="invalid_date" />
+		<result property="cur_state" column="cur_state" />
+		<result property="state_time" column="state_time" />
+		<result property="create_time" column="create_time" />
+		<result property="warn_num" column="warn_num" />
+	</resultMap>
+	
+    <select id="get" resultMap="barterOrderDetailResultMap">
+		SELECT 
+			*
+		FROM as_barter_order_detail a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="barterOrderDetailResultMap">
+		SELECT 
+			*
+		FROM as_barter_order_detail a WHERE 1=1 
+		<if test="order_id != null and order_id != ''">
+			AND a.order_id = #{order_id}
+		</if>
+		ORDER BY a.state_time DESC
+	</select>
+	<insert id="insert">
+		insert into
+		as_barter_order_detail(logid,detail_id,order_id,corp_id,corp_name,site_id,site_name,box_id,product_id,product_name,barter_num,inventory_num,bproduct_id,bproduct_name,surplus_num,barter_date,invalid_date,cur_state,state_time,create_time,warn_num)
+		values(#{logid},#{detail_id},#{order_id},#{corp_id},#{corp_name},#{site_id},#{site_name},#{box_id},#{product_id},#{product_name},#{barter_num},#{inventory_num},#{bproduct_id},#{bproduct_name},#{surplus_num},#{barter_date},#{invalid_date},#{cur_state},#{state_time},#{create_time},#{warn_num})
+	</insert>
+	
+	<insert id="update">
+		update as_barter_order_detail set box_id=#{box_id},product_id=#{product_id},product_name=#{product_name},barter_num=#{barter_num},inventory_num=#{inventory_num},bproduct_id=#{bproduct_id},bproduct_name=#{bproduct_name},surplus_num=#{surplus_num},barter_date=#{barter_date},invalid_date=#{invalid_date},cur_state=#{cur_state},state_time=#{state_time},create_time=#{create_time}
+		where logid=#{logid}
+	</insert>
+	
+	<delete id="delete">
+	    delete from as_barter_order_detail where order_id=#{order_id}
+	</delete>
+</mapper>

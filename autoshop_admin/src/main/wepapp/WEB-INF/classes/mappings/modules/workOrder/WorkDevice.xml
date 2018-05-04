@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.workOrder.dao.WorkDeviceDao">
+	
+	<select id="get" resultType="WorkDevice">
+		SELECT 
+			* 
+		FROM as_work_device 
+		WHERE logid = #{logid}
+	</select>
+	
+<!-- 	<select id="findList" resultType="WorkDevice">
+		SELECT 
+			* 
+		FROM as_work_device  
+		WHERE 1=1
+		<if test="siteId != null and siteId != ''">
+			AND site_id = #{siteId} 
+		</if>
+		<if test="managerId != null and managerId != ''">
+			AND manager_id = #{managerId} 
+		</if>
+		<if test="handlerId != null and handlerId != ''">
+			AND handler_id = #{handlerId} 
+		</if>
+		<if test="curState != null and curState != ''">
+			AND cur_state = #{curState} 
+		</if>
+		ORDER BY create_time DESC
+	</select> -->
+	
+	<select id="findListByWorkId" resultType="WorkDevice">
+		SELECT 
+			* 
+		FROM as_work_device 
+		WHERE work_id = #{workId}
+	</select>
+	
+<!-- 	<insert id="insert">
+		INSERT INTO as_work_device(
+			logid,
+			corp_id,
+			corp_name, 
+			work_id, 
+			work_title, 
+			work_level, 
+			work_type, 
+			question_cont,
+			handle_plan,
+			handle_result,
+			site_id,
+			site_name,
+			manager_id,
+			manager_name, 
+			handler_id,
+			handler_name, 
+			accept_time,
+			handle_stime,
+			handle_etime,
+			cur_state,
+			state_time,
+			create_time
+		) VALUES (
+			#{logid},
+			#{corpId},
+			#{corpName}, 
+			#{workId}, 
+			#{workTitle}, 
+			#{workLevel}, 
+			#{workType}, 
+			#{questionCont},
+			#{handlePlan},
+			#{handleResult},
+			#{siteId},
+			#{siteName},
+			#{managerId},
+			#{managerName},
+			#{handlerId},
+			#{handlerName},
+			#{acceptTime},
+			#{handleStime},
+			#{handleEtime},
+			#{curState},
+			#{stateTime},
+			#{createTime}
+		)
+	</insert>  -->
+	
+</mapper>

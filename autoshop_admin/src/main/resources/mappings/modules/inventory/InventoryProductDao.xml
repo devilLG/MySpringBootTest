@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.inventory.dao.InventoryProductDao">
+	<resultMap type="com.zhilai.master.modules.inventory.entity.InventoryProduct" id="inventoryProductResultMap">
+		<id property="logid" column="logid" />
+		<result property="warehouse_id" column="warehouse_id" />
+		<result property="wproduct_id" column="wproduct_id" />
+		<result property="corp_id" column="corp_id" />
+		<result property="corp_name" column="corp_name" />
+		<result property="site_id" column="site_id" />
+		<result property="site_name" column="site_name" />
+		<result property="warehouse_id" column="warehouse_id" />
+		<result property="warehouse_name" column="warehouse_name" />
+		<result property="warehouse_code" column="warehouse_code" />
+		<result property="product_id" column="product_id" />
+		<result property="product_name" column="product_name" />
+		<result property="productType_id" column="productType_id" />
+		<result property="productType_name" column="productType_name" />
+		<result property="bar_code" column="bar_code" />
+		<result property="inventory_total" column="inventory_total" />
+		<result property="inventory_num" column="inventory_num" />
+		<result property="inventory_transit" column="inventory_transit" />
+		<result property="inventory_renum" column="inventory_renum" />
+		<result property="overdue_num" column="overdue_num" />
+		<result property="create_time" column="create_time" />
+		<result property="brand_name" column="brand_name" />
+		<result property="normal_price" column="normal_price" />
+		<result property="product_title" column="product_title" />
+		<result property="detail_url" column="detail_url" />
+		<result property="product_model" column="product_model" />
+		<result property="temper_type" column="temper_type" />
+	</resultMap>
+	
+	<select id="get" resultMap="inventoryProductResultMap">
+		SELECT 
+			*
+		FROM as_inventory_product a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="inventoryProductResultMap">
+		SELECT 
+			a.*, b.brand_name, b.normal_price, b.product_title, b.detail_url, b.product_model, b.temper_type
+		FROM as_inventory_product a , as_product_info b WHERE a.product_id=b.product_id 
+		<if test="product_name != null and product_name != ''">
+			AND a.product_name like 
+					<if test="dbName == 'oracle'">'%'||#{product_name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{product_name}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{product_name}, '%')</if>
+		</if>
+		<if test="bar_code != null and bar_code != ''">
+			AND a.bar_code like 
+					<if test="dbName == 'oracle'">'%'||#{bar_code}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bar_code}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{bar_code}, '%')</if>
+		</if>
+		<if test="site_id != null and site_id != ''">
+			AND a.site_id = #{site_id}
+		</if>
+		<if test="corp_id != null and corp_id != ''">
+			AND a.corp_id = #{corp_id}
+		</if>
+		<if test="type != null and type == 1">
+			AND a.inventory_transit = 0
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+
+	<select id="findExist" resultMap="inventoryProductResultMap" >
+       select * from as_inventory_product where site_id=#{site_id} and product_id=#{product_id}
+	</select>
+	
+	<select id="findProductByCorpId" resultMap="inventoryProductResultMap" >
+       select * from as_inventory_product where corp_id=#{corp_id} and product_id=#{product_id}
+	</select>
+	
+	<insert id="insert">
+		insert into
+		as_inventory_product(logid,wproduct_id,site_id,site_name,corp_id,corp_name,warehouse_id,warehouse_name,warehouse_code,product_id,product_name,productType_id,productType_name,bar_code,inventory_total,inventory_num,inventory_transit,inventory_renum,overdue_num,create_time)
+		values(#{logid},#{wproduct_id},#{site_id},#{site_name},#{corp_id},#{corp_name},#{warehouse_id},#{warehouse_name},#{warehouse_code},#{product_id},#{product_name},#{productType_id},#{productType_name},#{bar_code},#{inventory_total},#{inventory_num},#{inventory_transit},#{inventory_renum},#{overdue_num},#{create_time})
+	</insert>
+	
+	<insert id="update">
+		update as_inventory_product set corp_name=#{corp_name},warehouse_id=#{warehouse_id},warehouse_name=#{warehouse_name},warehouse_code=#{warehouse_code},product_id=#{product_id},product_name=#{product_name},productType_id=#{productType_id},productType_name=#{productType_name},bar_code=#{bar_code},inventory_total=#{inventory_total},inventory_num=#{inventory_num},inventory_transit=#{inventory_transit},inventory_renum=#{inventory_renum},overdue_num=#{overdue_num} where logid=#{logid}
+	</insert>
+	
+	<delete id="delete">
+	    delete from as_inventory_product where logid=#{logid}
+	</delete>
+	
+</mapper>

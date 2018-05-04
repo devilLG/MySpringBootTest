@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.broadcast.dao.AdvertMediaDao">
+	
+	<select id="get" resultType="AdvertMedia">
+		SELECT 
+			* 
+		FROM as_advert_media 
+		WHERE logid = #{logid}
+	</select>
+	
+	<select id="findList" resultType="AdvertMedia">
+		SELECT 
+			* 
+		FROM as_advert_media  
+		WHERE 1=1
+		<if test="mediaName != null and mediaName != ''">
+			AND (media_name = #{mediaName} OR media_name LIKE 
+				<if test="dbName == 'oracle'">'%'||#{mediaName}||'%')</if>
+				<if test="dbName == 'mssql'">'%'+#{mediaName}+'%')</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{mediaName}, '%'))</if>
+		</if>
+		<if test="mediaTitile != null and mediaTitile != ''">
+			AND (media_titile = #{mediaTitile} OR media_titile LIKE 
+				<if test="dbName == 'oracle'">'%'||#{mediaTitile}||'%')</if>
+				<if test="dbName == 'mssql'">'%'+#{mediaTitile}+'%')</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{mediaTitile}, '%'))</if>
+		</if>
+		<if test="mimeType != null and mimeType != ''">
+				AND mime_type = #{mimeType}
+		</if>
+		<if test="mediaType != null and mediaType != ''">
+				AND media_type = #{mediaType}
+		</if>
+		<if test="curState != null and curState != ''">
+				AND cur_state = #{curState}
+		</if>
+		ORDER BY state_time DESC,create_time DESC
+	</select>
+	
+
+	
+	<insert id="insert">
+		INSERT INTO as_advert_media(
+			logid,
+			media_id,
+			corp_id, 
+			corp_name, 
+			media_name, 
+			media_titile, 
+			media_type, 
+			mime_type, 
+			resolution_x,
+			resolution_y,
+			media_address,
+			media_size,
+			cur_state,
+			state_time,
+			description,
+			create_time
+		) VALUES (
+			#{logid},
+			#{mediaId},
+			#{corpId}, 
+			#{corpName}, 
+			#{configName}, 
+			#{mediaTitile}, 
+			#{mediaType}, 
+			#{mimeType},
+			#{resolutionX},
+			#{resolutionY},
+			#{mediaAddress},
+			#{mediaSize},
+			#{curState},
+			#{stateTime},
+			#{description},
+			#{createTime}
+		)
+	</insert>
+		
+	<update id="update">
+		update as_advert_media set 
+		corp_id=#{corpId},
+		corp_name=#{corpName},
+		media_name=#{configName},
+		media_titile=#{mediaTitile},
+		media_type=#{mediaType},
+		mime_type=#{mimeType},
+		resolution_x=#{resolutionX},
+		resolution_y=#{resolutionY},
+		media_address=#{mediaAddress},
+		media_size=#{mediaSize},
+		cur_state=#{curState},
+		state_time=#{stateTime},
+		description=#{description}
+	</update>
+	
+ 	<delete id="delete">
+		delete from as_advert_media where logid=#{logid}
+	</delete>
+</mapper>

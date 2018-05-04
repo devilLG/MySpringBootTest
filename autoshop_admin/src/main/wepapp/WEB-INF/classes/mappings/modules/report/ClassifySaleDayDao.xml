@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.report.dao.ClassifySaleDayDao">
+ 	<resultMap type="com.zhilai.master.modules.report.entity.ClassifySaleDay" id="classifySaleDayResultMap">
+ 		<id property="logid" column="logid" />
+ 		<result property="corp_id" column="corp_id" />
+		<result property="corp_name" column="corp_name"/>
+		<result property="classify_id" column="classify_id" />
+		<result property="classify_name" column="classify_name"/>
+		<result property="sale_money" column="sale_money"/>
+		<result property="sale_num" column="sale_num"/>
+		<result property="rpt_date" column="rpt_date"/>
+		<result property="rpt_day" column="rpt_day"/>
+		<result property="rpt_week" column="rpt_week"/>
+		<result property="rpt_month" column="rpt_month"/>
+		<result property="rpt_year" column="rpt_year"/>
+		<result property="create_time" column="create_time"/>
+ 	</resultMap>
+ 	
+ 	<select id="get" resultMap="classifySaleDayResultMap">
+		SELECT 
+			*
+		FROM as_classify_sale_day a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="classifySaleDayResultMap">
+		SELECT 
+			*
+		FROM as_classify_sale_day a WHERE 1=1 
+		<if test="classify_id != null and classify_id != '' ">
+			and classify_id =#{classify_id}
+		</if>
+		<if test="classify_name != null and classify_name != '' ">
+			and classify_name =#{classify_name}
+		</if>
+		<if test="rpt_date != null and rpt_date !=''">
+			AND rpt_date=#{rpt_date}
+		</if>
+		<if test="corp_id != null and corp_id != '' ">
+			AND corp_id =#{corp_id}
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+ 	
+ </mapper> 
+ 	

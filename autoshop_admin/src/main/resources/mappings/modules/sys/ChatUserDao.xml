@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.sys.dao.ChatUserDao">
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="com.zhilai.master.modules.sys.entity.ChatUser">
+		SELECT * FROM reg_sysuser WHERE logid = #{logid}
+	</select> 
+ 
+	<select id="findAllCount" resultType="long">
+		SELECT
+			COUNT(1)
+		FROM reg_sysuser a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<!-- 插入用户 -->
+	<insert id="insert">
+		INSERT INTO reg_sysuser(user_no,login_id,passwd,mobile,tel,name,email,state,distime,create_time,openid,encode_type,corp_id,corp_name,salt)
+		VALUES (#{user_no}, #{loginId}, #{passwd}, #{mobile}, #{mobile},#{loginId},#{email}, #{state}, #{disTime},#{reg_time},#{openid}, #{encrypt_type},
+		#{corp_id},#{corp_name},#{salt})
+	</insert>
+	
+	<!-- 更新密码 -->
+	<update id="updatePwd">
+		UPDATE reg_sysuser SET
+			passwd = #{passwd},			
+			remark = #{remark}
+		WHERE login_id = #{loginId}
+	</update>
+	
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE reg_sysuser SET 
+			company_id = #{company.logid}, 
+			office_id = #{office.logid}, 
+			login_name = #{loginName}, 
+			passwd = #{passwd}, 
+			no = #{no}, 
+			name = #{name}, 
+			email = #{email}, 
+			phone = #{phone}, 
+			mobile = #{mobile}, 
+			user_type = #{userType}, 
+			update_by = #{updateBy.logid}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			login_flag = #{loginFlag},
+			photo = #{photo}
+		WHERE logid = #{logid}
+	</update>
+	
+	<!-- 删除用户和角色关联表数据 -->
+	<delete id="deleteUserRole">
+		DELETE FROM reg_sysuser_role WHERE user_id = #{logid}
+	</delete>
+	
+	 
+	
+	<!-- 更新用户信息  -->
+	<update id="updateUserInfo">
+		UPDATE reg_sysuser SET 
+			email = #{email}, 
+			phone = #{phone}, 
+			mobile = #{mobile}, 
+			update_by = #{updateBy.logid}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			photo = #{photo}
+		WHERE logid = #{logid}
+	</update>
+	
+	<!-- 更新用户密码 -->
+	<update id="updatepasswdById">
+		UPDATE reg_sysuser SET 
+			passwd = #{passwd} 
+		WHERE logid = #{logid}
+	</update>
+	
+	<!-- 更新登录信息，如登录IP、登录时间 -->
+	<update id="updateLoginInfo">
+		UPDATE reg_sysuser SET 
+			login_ip = #{loginIp}, 
+			login_Date = #{loginDate} 
+		WHERE logid = #{logid}
+	</update>
+	
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		UPDATE reg_sysuser SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE logid = #{logid}
+	</update>
+	
+	<select id="findChatUser" resultType="com.zhilai.master.modules.sys.entity.ChatUser">
+		select * from reg_sysuser where login_id=#{loginId} or mobile=#{mobile} or email=#{email} limit 1
+	</select>
+	<select id="loginChatUser" resultType="com.zhilai.master.modules.sys.entity.ChatUser">
+		select * from reg_sysuser where login_id=#{loginId} limit 1
+	</select>
+	
+	
+</mapper>

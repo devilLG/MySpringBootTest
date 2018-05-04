@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.broadcast.dao.AdvertAreaDao">
+	
+	<select id="get" resultType="AdvertArea">
+		SELECT 
+			* 
+		FROM as_advert_area 
+		WHERE logid = #{logid}
+	</select>
+	
+	<select id="findOneByConfigId" resultType="AdvertArea">
+		SELECT 
+			* 
+		FROM as_advert_area 
+		WHERE config_id = #{configId}
+	</select>
+	
+	<select id="findList" resultType="AdvertArea">
+		SELECT 
+			* 
+		FROM as_advert_area  
+		WHERE 1=1
+		<if test="areaId != null and areaId != ''">
+			AND area_id = #{areaId} 
+		</if>
+		<if test="configName != null and configName != ''">
+			AND (config_name = #{configName} OR config_name LIKE 
+				<if test="dbName == 'oracle'">'%'||#{configName}||'%')</if>
+				<if test="dbName == 'mssql'">'%'+#{configName}+'%')</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{configName}, '%'))</if>
+		</if>
+		ORDER BY create_time DESC
+	</select>
+	
+
+ 	<insert id="insert">
+		INSERT INTO as_advert_area(
+			logid,
+			area_id,
+			area_name, 
+			config_id, 
+			config_name, 
+			seq_id, 
+			resolution_x,
+			resolution_y,
+			media_type,
+			mime_type,
+			description,
+			create_time
+		) VALUES (
+			#{logid},
+			#{areaId},
+			#{areaName}, 
+			#{configId},
+			#{configName}, 
+			#{seqId},
+			#{resolutionX},
+			#{resolutionY},
+			#{mediaType},
+			#{mimeType},
+			#{description},
+			#{createTime}
+		)
+	</insert>
+	
+ 
+ 	<update id="update">
+		update as_advert_area set 
+		area_id=#{areaId},
+		area_name=#{areaName},
+		config_name=#{configName},
+		seq_id=#{seqId},
+		resolution_x=#{resolutionX},
+		resolution_y=#{resolutionY},
+		media_type=#{mediaType},
+		mime_type=#{mimeType},
+		description=#{description}
+	</update>
+		
+
+	
+ 	<delete id="delete">
+		delete from as_advert_area where logid=#{logid}
+	</delete> 
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.monitor.dao.DeviceEnvDao">
+	
+	<select id="get" resultType="DeviceEnv">
+		SELECT 
+			* 
+		FROM as_device_env 
+		WHERE env_id = #{envId}
+	</select>
+	
+	<select id="findByDeviceId" resultType="DeviceEnv">
+		SELECT 
+			* 
+		FROM as_device_env 
+		WHERE device_id = #{deviceId}
+	</select>
+	
+	<select id="findByDeviceName" resultType="DeviceEnv">
+		SELECT 
+			* 
+		FROM as_device_env 
+		WHERE device_name = #{deviceName}
+	</select>
+	
+	<delete id="deleteList">
+	    delete from as_device_env where device_id = #{deviceId}
+	</delete>
+	
+	<insert id="insert">
+		INSERT INTO as_device_env(
+			logid,
+			env_id,
+			device_id, 
+			device_code, 
+			device_name, 
+			device_model, 
+			env_code, 
+			env_name,
+			env_svalue,
+			env_evalue,
+			env_wsvalue,
+			env_wevalue,
+			unit_id,
+			unit_name, 
+			error_level,
+			create_time
+		) VALUES (
+			#{logid},
+			#{envId},
+			#{deviceId}, 
+			#{deviceCode}, 
+			#{deviceName}, 
+			#{deviceModel}, 
+			#{envCode}, 
+			#{envName},
+			#{envSvalue},
+			#{envEvalue},
+			#{envWsvalue},
+			#{envWevalue},
+			#{unitId},
+			#{unitName},
+			#{errorLevel},
+			#{createTime}
+		)
+	</insert> 
+</mapper>

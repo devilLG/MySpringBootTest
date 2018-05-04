@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.log.dao.UseLogDao">
+ 	<resultMap type="com.zhilai.master.modules.log.entity.UseLog" id="UseLogResultMap">
+ 		<result property="logid" column="logid" />
+		<result property="site_id" column="site_id" />
+		<result property="site_name" column="site_name" />
+		<result property="oper_level" column="oper_level" />
+		<result property="oper_id" column="oper_id" />
+		<result property="oper_name" column="oper_name" />
+		<result property="oper_code" column="oper_code" />
+		<result property="oper_action" column="oper_action" />
+		<result property="oper_obj" column="oper_obj" />
+		<result property="oper_old" column="oper_old" />
+		<result property="oper_new" column="oper_new" />
+		<result property="oper_ret" column="oper_ret" />
+		<result property="oper_time" column="oper_time" />
+		<result property="create_time" column="create_time" />
+ 	</resultMap>
+    
+	<select id="get" resultMap="UseLogResultMap">
+		SELECT  *  FROM as_site_uselog WHERE  logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="UseLogResultMap">
+		select * from as_site_uselog where 1=1
+		<if test="site_id != null and site_id != '' ">
+			AND site_id = #{site_id}
+		</if>
+		<if test="site_name !=null and site_name !='' ">
+			AND site_name like CONCAT('%',#{site_name},'%' )
+		</if>
+		<if test="oper_name !=null and oper_name !='' ">
+			AND oper_name like CONCAT('%',#{oper_name},'%' )
+		</if>
+		<if test="oper_time != null and oper_time != '' ">
+			AND oper_time >= CONCAT(#{oper_time},' 00:00:00')
+		</if>
+		<if test="oper_time_end != null and oper_time_end != '' ">
+			AND oper_time <![CDATA[< ]]>DATE_ADD(CONCAT(#{oper_time_end},' 00:00:00'), INTERVAL 1 DAY)
+		</if>
+		<if test="create_time !=null and create_time !='' ">
+			AND create_time like CONCAT('%',#{create_time},'%' )
+		</if>
+		order by create_time desc
+	</select>
+
+</mapper>

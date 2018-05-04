@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.sys.dao.AreaDao">
+    
+	<sql id="areaColumns">
+		a.logid,
+		a.parent_id AS "parent.logid",
+		a.parent_ids,
+		a.code,
+		a.name,
+		a.sort,
+		a.type,
+		a.remarks,
+		a.create_by AS "createBy.logid",
+		a.create_date,
+		a.update_by AS "updateBy.logid",
+		a.update_date,
+		a.del_flag,
+		p.name AS "parent.name"
+	</sql>
+	
+	<sql id="areaJoins">
+		LEFT JOIN sys_office p ON p.logid = a.parent_id
+    </sql>
+    
+	<select id="get" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<!-- 数据范围过滤 -->
+		${sqlMap.dsf}
+		OR a.logid = #{currentUser.office.area.logid}
+		ORDER BY a.code
+	</select>
+	
+	<select id="findAllList" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		ORDER BY a.code
+	</select>
+	
+	<select id="findByParentIdsLike" resultType="Area">
+		SELECT
+			a.logid,
+			a.parent_id AS "parent.logid",
+			a.parent_ids
+		FROM sys_area a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds}
+		ORDER BY a.code
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_area(
+			logid, 
+			parent_id, 
+			parent_ids, 
+			code, 
+			name, 
+			sort,
+			type, 
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date, 
+			remarks, 
+			del_flag
+		) VALUES (
+			#{logid}, 
+			#{parent.logid}, 
+			#{parentIds}, 
+			#{code}, 
+			#{name}, 
+			#{sort}, 
+			#{type}, 
+			#{createBy.logid}, 
+			#{createDate}, 
+			#{updateBy.logid}, 
+			#{updateDate}, 
+			#{remarks}, 
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_area SET 
+			parent_id = #{parent.logid}, 
+			parent_ids = #{parentIds}, 
+			code = #{code}, 
+			name = #{name}, 
+			sort = #{sort}, 
+			type = #{type}, 
+			update_by = #{updateBy.logid}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks}
+		WHERE logid = #{logid}
+	</update>
+	
+	<update id="updateParentIds">
+		UPDATE sys_area SET 
+			parent_id = #{parent.logid}, 
+			parent_ids = #{parentIds}
+		WHERE logid = #{logid}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_area SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE logid = #{logid} OR parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%,'||#{logid}||',%'</if>
+					<if test="dbName == 'mssql'">'%,'+#{logid}+',%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%,', #{logid}, ',%')</if>
+	</update>
+	
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.monitor.dao.DeviceInfoDao">
+	
+	<select id="get" resultType="DeviceInfo">
+		SELECT 
+			* 
+		FROM as_device_info 
+		WHERE device_id = #{deviceId}
+	</select>
+	
+	<select id="findList" resultType="DeviceInfo">
+		SELECT 
+			* 
+		FROM as_device_info  
+		WHERE 1=1
+		<if test="deviceName != null and deviceName != ''">
+				AND device_name = #{deviceName}
+		</if>
+		<if test="deviceModel != null and deviceModel != ''">
+				AND device_model = #{deviceModel}
+		</if>
+		<if test="deviceBard != null and deviceBard != ''">
+				AND device_bard = #{deviceBard}
+		</if>
+		<if test="deviceMfrs != null and deviceMfrs != ''">
+				AND device_mfrs = #{deviceMfrs}
+		</if>
+		<if test="createTimeStart != null and createTimeStart != ''">
+			AND (create_time &gt; #{createTimeStart} )
+		</if>
+		<if test="createTimeEnd != null and createTimeEnd != ''">
+			AND (create_time &lt; DATE_ADD(#{createTimeEnd},INTERVAL 1 DAY) )
+		</if>
+		ORDER BY create_time DESC
+	</select>
+	
+	<select id="findOneByDeviceId" resultType="DeviceInfo">
+		SELECT 
+			* 
+		FROM as_device_info  
+		WHERE device_id = #{deviceId}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO as_device_info(
+			logid,
+			device_id,
+			device_code, 
+			device_name, 
+			device_model, 
+			device_bard, 
+			device_size, 
+			device_mfrs, 
+			device_pic,
+			special_nature,
+			device_postion,
+			device_effect,
+			maintenance,
+			error_level,
+			create_time
+		) VALUES (
+			#{logid},
+			#{deviceId},
+			#{deviceCode}, 
+			#{deviceName}, 
+			#{deviceModel}, 
+			#{deviceBard}, 
+			#{deviceSize}, 
+			#{deviceMfrs},
+			#{devicePic},
+			#{specialNature},
+			#{devicePostion},
+			#{deviceEffect},
+			#{maintenance},
+			#{errorLevel},
+			#{createTime}
+		)
+	</insert>
+		
+	<update id="update">
+		update as_device_info set 
+		device_model=#{deviceModel},
+		device_bard=#{deviceBard},
+		device_size=#{deviceSize},
+		device_mfrs=#{deviceMfrs},
+		device_pic=#{devicePic},
+		device_postion=#{devicePostion},
+		device_effect=#{deviceEffect},
+		maintenance=#{maintenance},
+		error_level=#{errorLevel},
+		special_nature=#{specialNature}
+		where logid=#{logid}
+	</update>
+	
+	<delete id="delete">
+		delete from as_device_info where logid=#{logid}
+	</delete>
+</mapper>

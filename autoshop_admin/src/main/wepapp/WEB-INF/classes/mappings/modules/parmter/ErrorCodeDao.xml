@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.parmter.dao.ErrorCodeDao">
+ 	<resultMap type="com.zhilai.master.modules.parmter.entity.ErrorCode" id="ErrorCodeResultMap">
+ 		<id property="logid" column="logid" />
+		<result property="err_id" column="err_id" />
+		<result property="err_type" column="err_type" />
+		<result property="err_code" column="err_code" />
+		<result property="err_desc" column="err_desc" />
+		<result property="err_level" column="err_level" />
+		<result property="err_box" column="err_box" />
+ 	</resultMap>
+    
+	<select id="get" resultMap="ErrorCodeResultMap">
+		SELECT  *  FROM as_error_code WHERE  logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="ErrorCodeResultMap">
+		select * from as_error_code t where 1=1
+		<if test="logid != null and logid != '' ">
+			AND t.logid=#{logid}
+		</if>
+		<if test="err_id != null and err_id != '' ">
+			AND t.err_id = #{err_id}
+		</if>
+		<if test="err_type != null and err_type != '' ">
+			AND t.err_type = #{err_type}
+		</if>
+		<if test="err_code != null and err_code != '' ">
+			AND t.err_code = #{err_code}
+		</if>
+		order by err_code desc
+	</select>
+	<insert id="insert">
+		INSERT INTO
+		as_error_code(logid,err_id,err_type,err_code,err_desc,err_level,err_box)
+		VALUES(#{logid},#{err_id},#{err_type},#{err_code},#{err_desc},#{err_level},#{err_box});
+	</insert>
+	<delete id="delete">
+		delete from as_error_code where logid = #{logid}
+	</delete>
+	<update id="update"> 
+		update as_error_code set
+		err_type=#{err_type},err_desc=#{err_desc},err_code =#{err_code},
+		err_level=#{err_level}, err_box=#{err_box} where logid =#{logid}
+	</update>
+</mapper>

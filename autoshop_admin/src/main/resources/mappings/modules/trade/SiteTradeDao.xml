@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.trade.dao.SiteTradeDao">
+ 	<resultMap type="com.zhilai.master.modules.trade.entity.SiteTrade" id="SiteTradeResultMap">
+ 		<id property="logid" column="logid" />
+		<result property="trade_code" column="trade_code" />
+		<result property="trade_name" column="trade_name" />
+		<result property="trade_desc" column="trade_desc" />
+		<result property="site_id" column="site_id" />
+		<result property="site_name" column="site_name" />
+		<result property="owner_id" column="owner_id" />
+ 	</resultMap>
+    
+	<select id="get" resultMap="SiteTradeResultMap">
+		SELECT  *  FROM as_site_trade WHERE  logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="SiteTradeResultMap">
+		SELECT * FROM as_site_trade where 1=1
+		<if test="logid != null and logid != '' ">
+			AND logid = #{logid}
+		</if>
+		<if test="owner_id != null and owner_id != '' ">
+			AND owner_id = #{owner_id}
+		</if>
+		<if test="site_id != null and site_id != '' ">
+			AND site_id = #{site_id}
+		</if>
+		<if test="site_name != null and site_name != '' ">
+			AND site_name like CONCAT('%',#{site_name},'%' )
+		</if>
+		<if test="trade_code != null and trade_code != '' ">
+			AND trade_code like CONCAT('%',#{trade_code},'%' )
+		</if>
+		<if test="trade_name != null and trade_name != '' ">
+			AND trade_name like CONCAT('%',#{trade_name},'%' )
+		</if>
+		<if test="trade_desc != null and trade_desc != '' ">
+			AND trade_desc like CONCAT('%',#{trade_desc},'%' )
+		</if>			
+		ORDER BY trade_code desc
+	</select>
+
+	
+	<select id="findAllList" resultMap="SiteTradeResultMap">
+		SELECT * FROM as_site_trade where 1=1
+		ORDER BY trade_code desc 
+	</select>
+	<insert id="insert">
+		INSERT INTO as_site_trade (logid,trade_code,trade_name,trade_desc,site_id,site_name,owner_id) VALUES(#{logid},
+		#{trade_code},#{trade_name},#{trade_desc},#{site_id},#{site_name},#{owner_id});
+	</insert>
+	<update id="update">
+		UPDATE as_site_trade SET trade_code = #{trade_code}, trade_name = #{trade_name},trade_desc = #{trade_desc}, site_id = #{site_id} ,
+	site_name = #{site_name}, owner_id = #{owner_id}  WHERE logid = #{logid}
+	</update>
+	
+	<delete id="delete">
+		delete from as_site_trade where logid = #{logid}
+	</delete>
+	
+</mapper>

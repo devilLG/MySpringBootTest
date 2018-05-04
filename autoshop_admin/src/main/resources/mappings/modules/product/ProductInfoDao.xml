@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.product.dao.ProductInfoDao">
+ 	<resultMap type="com.zhilai.master.modules.product.entity.ProductInfo" id="productInfoResultMap">
+ 		<id property="logid" column="logid" />
+		<result property="corp_id" column="corp_id"/>
+		<result property="corp_name" column="corp_name"/>
+		<result property="product_id" column="product_id"/>
+		<result property="product_name" column="product_name"/>
+		<result property="product_title" column="product_title"/>
+		<result property="product_model" column="product_model"/>
+		<result property="unit_id" column="unit_id"/>
+		<result property="productType_id" column="productType_id"/>
+		<result property="productType_name" column="productType_name"/>
+		<result property="temper_type" column="temper_type"/>
+		<result property="brand_id" column="brand_id"/>
+		<result property="brand_name" column="brand_name"/>
+		<result property="bar_code" column="bar_code"/>
+		<result property="normal_price" column="normal_price"/>
+		<result property="pro_length" column="pro_length"/>
+		<result property="pro_width" column="pro_width"/>
+		<result property="pro_height" column="pro_height"/>
+		<result property="pro_desc" column="pro_desc"/>
+		<result property="promotion_desc" column="promotion_desc"/>
+		<result property="pay_image" column="pay_image"/>
+		<result property="detail_url" column="detail_url"/>
+		<result property="create_time" column="create_time"/>
+		<result property="overdue_date" column="overdue_date"/>
+		<result property="metering_num" column="metering_num"/>
+		<result property="metering_name" column="metering_name"/>
+		<result property="metering_id" column="metering_id"/>
+ 	</resultMap>
+ 	
+ 	<select id="get" resultMap="productInfoResultMap">
+		SELECT 
+			*
+		FROM as_product_info a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="productInfoResultMap">
+		SELECT 
+			*
+		FROM as_product_info a WHERE 1=1 
+		<if test="product_name != null and product_name != ''">
+			AND a.product_name like 
+					<if test="dbName == 'oracle'">'%'||#{product_name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{product_name}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{product_name}, '%')</if>
+		</if>
+		<if test="bar_code != null and bar_code != ''">
+			AND a.bar_code like 
+					<if test="dbName == 'oracle'">'%'||#{bar_code}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bar_code}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{bar_code}, '%')</if>
+		</if>
+		<if test="product_beginPrice != null and product_beginPrice != '' ">
+			AND normal_price  <![CDATA[>=]]> #{product_beginPrice}
+		</if>
+		<if test="product_endPrice != null and product_endPrice != '' ">
+			AND normal_price  <![CDATA[<=]]> #{product_endPrice}
+		</if>
+		<if test="temper_type != null and temper_type != ''">
+			AND a.temper_type = #{temper_type}
+		</if>
+		<if test="corp_id != null and corp_id != ''">
+			AND a.corp_id = #{corp_id}
+		</if>
+		<if test="productType_ids != null and productType_ids != ''">
+		AND a.productType_id in 
+		<foreach collection="productType_ids" item="productType_ids"  open="(" separator="," close=")">  
+        		#{productType_ids}  
+     	</foreach>  
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<select id="findExist" resultMap="productInfoResultMap">
+		SELECT * FROM as_product_info a WHERE a.bar_code=#{bar_code} AND a.corp_id = #{corp_id}
+	</select>
+	
+	<select id="findOneByProductId" resultMap="productInfoResultMap">
+		SELECT * FROM as_product_info a WHERE a.product_id=#{product_id}
+	</select>
+	
+	<select id="findClassifyUsed" resultMap="productInfoResultMap">
+		select * from as_product_info where corp_id=#{corp_id} AND productType_id = #{productType_id}
+	</select>
+	
+	<select id="findBrandUsed" resultMap="productInfoResultMap">
+		select * from as_product_info where corp_id=#{corp_id} AND brand_id = #{brand_id}
+	</select>
+	
+	<insert id="insert">
+		insert into as_product_info(logid,corp_id,corp_name,product_id,product_name,product_title,product_model,unit_id,productType_id,productType_name,temper_type,brand_id,brand_name,bar_code,normal_price,pro_length,pro_width,pro_height,pro_desc,promotion_desc,pay_image,detail_url,create_time,overdue_date,metering_num,metering_name,metering_id)
+		values(#{logid},#{corp_id},#{corp_name},#{product_id},#{product_name},#{product_title},#{product_model},#{unit_id},#{productType_id},#{productType_name},#{temper_type},#{brand_id},#{brand_name},#{bar_code},#{normal_price},#{pro_length},#{pro_width},#{pro_height},#{pro_desc},#{promotion_desc},#{pay_image},#{detail_url},#{create_time},#{overdue_date},#{metering_num},#{metering_name},#{metering_id})
+	</insert>
+
+	<update id="update">
+		update as_product_info set corp_id=#{corp_id},corp_name=#{corp_name},product_name=#{product_name},product_title=#{product_title},product_model=#{product_model},productType_id=#{productType_id},productType_name=#{productType_name},brand_id=#{brand_id},brand_name=#{brand_name},bar_code=#{bar_code},normal_price=#{normal_price},pro_length=#{pro_length},pro_width=#{pro_width},pro_height=#{pro_height},pro_desc=#{pro_desc},promotion_desc=#{promotion_desc},pay_image=#{pay_image}
+		,detail_url=#{detail_url},unit_id=#{unit_id},temper_type=#{temper_type},overdue_date=#{overdue_date},metering_num=#{metering_num},metering_name=#{metering_name},metering_id=#{metering_id}
+		where logid=#{logid}
+	</update>
+	
+	<delete id="delete" parameterType="String">
+		delete from as_product_info where logid=#{logid}
+	</delete>
+ </mapper> 
+ 	

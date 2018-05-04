@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.log.dao.TradeLogDao">
+ 	<resultMap type="com.zhilai.master.modules.log.entity.TradeLog" id="TradeLogResultMap">
+ 		<id property="log_id" column="log_id" />
+		<result property="auth_name" column="auth_name" />
+		<result property="plat_code" column="plat_code" />
+		<result property="trade_code" column="trade_code" />
+		<result property="trade_name" column="trade_name" />
+		<result property="begin_time" column="begin_time" />
+		<result property="end_time" column="end_time" />
+		<result property="ret_code" column="ret_code" />
+		<result property="exec_time" column="exec_time" />
+		<result property="protocol" column="protocol" />
+ 	</resultMap>
+    
+	<select id="get" resultMap="TradeLogResultMap">
+		SELECT  *  FROM sys_trade_log WHERE  log_id = #{log_id}
+	</select>
+	
+	<select id="findList" resultMap="TradeLogResultMap">
+		SELECT log_id,auth_name,plat_code,
+		trade_code,	trade_name,	begin_time,	end_time,ret_code,exec_time,protocol
+		FROM
+		sys_trade_log t where 1=1
+		<if test="begin_time != null and begin_time != '' ">
+			AND t.begin_time >= CONCAT(#{begin_time},' 00:00:00')
+		</if>
+		<if test="end_time != null and end_time != '' ">
+			AND t.begin_time <![CDATA[< ]]>DATE_ADD(CONCAT(#{end_time},' 00:00:00'), INTERVAL 1 DAY)
+		</if>
+		<if test="auth_name != null and auth_name != ''">
+			AND t.auth_name like 
+					<if test="dbName == 'oracle'">'%'||#{auth_name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{auth_name}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{auth_name}, '%')</if>
+		</if>
+		<if test="trade_code != null and trade_code != '' ">
+			AND t.trade_code = #{trade_code}
+		</if>
+		order by begin_time desc
+	</select>
+	<insert id="insert">
+		INSERT INTO sys_trade_log
+		(log_id,auth_name,plat_code,trade_code,trade_name,begin_time,end_time,
+		ret_code,exec_time,	protocol)
+		VALUES
+		(#{log_id},	#{auth_name},#{plat_code},#{trade_code},#{trade_name},
+		#{begin_time},#{end_time},#{ret_code},#{exec_time},	#{protocol})
+	</insert>
+</mapper>

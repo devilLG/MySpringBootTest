@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.site.dao.MqttSiteDao">
+    
+	<select id="get" resultType="MqttSite">
+		SELECT * FROM as_site WHERE  logid = #{logid}
+	</select>
+	<select id="findBySite" resultType="MqttSite">
+		SELECT * FROM as_site WHERE  site_id = #{siteId}
+	</select>
+	
+	<select id="findByDev" resultType="MqttSite">
+		SELECT * FROM as_site WHERE  dev_id = #{devId}
+	</select>
+	
+	<select id="findByState" resultType="SiteHard">
+		SELECT  *  FROM as_site WHERE  state = #{state}
+	</select>
+	<select id="findByGroupId" resultType="MqttSite">
+		SELECT  *  FROM as_site WHERE  group_id = #{groupId}
+	</select>
+	
+	<select id="findList" resultType="MqttSite">
+		SELECT * FROM as_site where 1=1
+		<if test="siteId != null and siteId != ''">
+			and site_id LIKE CONCAT('%',#{siteId}, '%')
+		</if>
+		<if test="siteName != null and siteName != ''">
+			and site_name  LIKE CONCAT('%',#{siteName}, '%')
+		</if>
+		<if test="state != null and state != ''">
+			and state=#{state}
+		</if>
+		<if test="createTime != null and createTime != ''">
+			and create_time  <![CDATA[ >= ]]> #{createTime}
+		</if>
+		<if test="updateTime != null and updateTime != ''">
+			and update_time  <![CDATA[ <= ]]> #{updateTime}
+		</if>
+		ORDER BY create_time DESC
+	</select>
+	
+	<select id="findAllList" resultType="MqttSite">
+		SELECT  *  FROM as_site 
+	</select>
+	
+	<select id="findTotalByDate" resultType="int">
+		SELECT  COUNT(*)  FROM as_site where 1=1
+		<if test="createTime != null and createTime != ''">
+			and create_time  <![CDATA[ <= ]]> #{createTime}
+		</if>
+		<if test="groupId != null and groupId != ''">
+			AND group_id =#{groupId}
+		</if>
+		<if test="corpId != null and corpId != ''">
+			AND corp_id =#{corpId}
+		</if>
+	</select>
+	
+	<select id="findTotal" resultType="int">
+		SELECT  COUNT(*)  FROM as_site where 1=1
+	</select>
+	
+	<insert id="insert">
+			<!-- INSERT INTO as_site(logid,site_id,site_name,create_time,update_time,state,location,city_code,city_name,corp_id,group_id,group_name,latitude,longitude,corp_name,refresh_state)
+			values(#{logid},#{siteId},#{siteName},#{createTime},#{updateTime},#{state},#{location},#{cityCode},#{cityName},#{corpId},#{groupId},#{groupName},#{latitude},#{longitude},#{corpName},#{refreshState}) -->
+			INSERT INTO as_site(logid,site_id,site_name,create_time,state,location,city_code,city_name,corp_id,corp_name,group_id,group_name,latitude,longitude,refresh_state,dev_id,dev_name)
+			values(#{logid},#{siteId},#{siteName},#{createTime},#{state},#{location},#{cityCode},#{cityName},#{corpId},#{corpName},#{groupId},#{groupName},#{latitude},#{longitude},#{refreshState},#{devId},#{devName})
+	</insert>
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO as_site(logid,site_id,site_name,create_time,state,location,city_code,city_name,corp_id,corp_name,group_id,group_name,latitude,longitude,refresh_state,dev_id,dev_name)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.logid},#{item.siteId},#{item.siteName},#{item.createTime},#{item.state},#{item.location},#{item.cityCode},#{item.cityName},#{item.corpId},#{item.corpName},#{item.groupId},#{item.groupName},#{item.latitude},#{item.longitude},#{item.refreshState},#{item.devId},#{item.devName})
+		</foreach>
+	</insert>
+	<update id="update">
+		<!-- update as_site set site_id=#{siteId},site_name=#{siteName},create_time=#{createTime},update_time=#{updateTime},state=#{state},
+		location=#{location},city_code=#{cityCode},city_name=#{cityName},corp_id=#{corpId},group_id=#{groupId},group_name=#{groupName},latitude=#{latitude},longitude=#{longitude},corp_name=#{corpName},refresh_state=#{refreshState} where logid=#{logid} -->
+		update as_site set site_id=#{siteId},site_name=#{siteName},location=#{location},city_code=#{cityCode},city_name=#{cityName},
+		corp_id=#{corpId},corp_name=#{corpName},group_id=#{groupId},group_name=#{groupName},latitude=#{latitude},longitude=#{longitude},
+		dev_id=#{devId},dev_name=#{devName}	
+		where logid=#{logid}
+	</update>
+	
+	<update id="byStateUpdate">
+		update as_site set state=#{state} where site_id=#{siteId} 
+	</update>
+	<select id="findOne" resultType="MqttSite">
+		select * from as_site where logid=#{logid} limit 2
+	</select>
+	
+	<select id="findOneById" resultType="MqttSite">
+		select * from as_site where logid=#{logid} limit 1
+	</select>
+	
+	<delete id="deleteList">
+		delete from as_site where logid in (${logid})
+	</delete>
+	<delete id="delete">
+		delete from as_site where logid = #{logid}
+	</delete>
+	
+</mapper>

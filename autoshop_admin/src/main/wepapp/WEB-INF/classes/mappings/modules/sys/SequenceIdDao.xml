@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.sys.dao.SequenceIdDao">
+
+	<resultMap type="com.zhilai.master.modules.sys.entity.SequenceId"
+		id="sequenceIdResultMap">
+		<id property="id" column="id" />
+		<result property="corp_id" column="corp_id" />
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+	</resultMap>
+	<select id="nextval" parameterType="com.zhilai.master.modules.sys.entity.SequenceId" resultType="int" >
+		select nextval(#{corp_id},#{name})
+	</select>
+	<select id="findList" resultMap="sequenceIdResultMap">
+		SELECT * FROM sys_sequence_id where 1=1
+		<if test="id != null and id != ''">
+			AND id = #{id}
+		</if>
+		<if test="corp_id != null and corp_id != ''">
+			AND corp_id = #{corp_id}
+		</if>
+		<if test="name != null and name != ''">
+			AND name = #{name}
+		</if>
+	</select>
+	<select id="findAllList" resultMap="sequenceIdResultMap">
+		SELECT  *  FROM sys_sequence_id where corp_id='8888'
+	</select>
+	<insert id="insert">
+		INSERT INTO
+		sys_sequence_id(corp_id,id,name)
+		VALUES(#{corp_id},#{id},#{name})
+	</insert>
+	<update id="update">
+		update sys_sequence_id set
+		corp_id=#{corp_id},id=#{id},name=#{name}
+		
+		where corp_id =#{corp_id} AND name =#{name}
+	</update>
+	<delete id="deleteByCorpId" parameterType="String">
+		delete from sys_sequence_id where corp_id=#{corp_id}
+	</delete>
+</mapper> 

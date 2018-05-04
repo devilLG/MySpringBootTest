@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhilai.master.modules.product.dao.ProductFavourableDao">
+ 	<resultMap type="com.zhilai.master.modules.product.entity.ProductFavourable" id="productFavourableResultMap">
+ 		<id property="logid" column="logid" />
+		<result property="favourable_id" column="favourable_id" />
+		<result property="corp_id" column="corp_id"/>
+		<result property="corp_name" column="corp_name"/>
+		<result property="favourable_type" column="favourable_type"/>
+		<result property="site_id" column="site_id"/>
+		<result property="product_id" column="product_id"/>
+		<result property="product_name" column="product_name"/>
+		<result property="bar_code" column="bar_code"/>
+		<result property="favourable_stime" column="favourable_stime"/>
+		<result property="favourable_etime" column="favourable_etime"/>
+		<result property="favourable_price" column="favourable_price"/>
+		<result property="nomarl_price" column="nomarl_price"/>
+		<result property="favourable_title" column="favourable_title"/>
+		<result property="nomarl_title" column="nomarl_title"/>
+		<result property="favourable_url" column="favourable_url"/>
+		<result property="nomarl_url" column="nomarl_url"/>
+		<result property="favourable_desc" column="favourable_desc"/>
+		<result property="cur_state" column="cur_state"/>
+		<result property="create_time" column="create_time"/>
+ 	</resultMap>
+ 	<select id="get" resultMap="productFavourableResultMap">
+		SELECT 
+			*
+		FROM as_product_favourable a
+		WHERE a.logid = #{logid}
+	</select>
+	
+	<select id="findList" resultMap="productFavourableResultMap">
+		SELECT 
+			*
+		FROM as_product_favourable a WHERE 1=1 
+		<if test="product_name != null and product_name != ''">
+			AND a.product_name like 
+					<if test="dbName == 'oracle'">'%'||#{product_name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{product_name}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{product_name}, '%')</if>
+		</if>
+		<if test="bar_code != null and bar_code != ''">
+			AND a.bar_code like 
+					<if test="dbName == 'oracle'">'%'||#{bar_code}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bar_code}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{bar_code}, '%')</if>
+		</if>
+		<if test="corp_id != null and corp_id != ''">
+			AND a.corp_id = #{corp_id}
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<select id="findExist" resultMap="productFavourableResultMap">
+		select * from as_product_favourable where product_id=#{product_id} 
+		AND (favourable_stime <![CDATA[<=]]> #{favourable_etime})
+		AND (favourable_etime <![CDATA[>=]]> #{favourable_stime})
+		AND favourable_type = #{favourable_type}
+		AND corp_id = #{corp_id}
+		<if test="favourable_type != null and favourable_type == '01'">
+			AND site_id = #{site_id}
+		</if>
+	</select>
+	
+	<select id="findProductFavourableStartList" parameterType="String" resultMap="productFavourableResultMap">
+		select * from as_product_favourable where favourable_stime=#{favourable_stime} and cur_state='0'
+	</select>
+	
+	<select id="findProductFavourableEndList" parameterType="String" resultMap="productFavourableResultMap">
+		select * from as_product_favourable where favourable_etime=#{favourable_etime} and cur_state='1'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO
+		as_product_favourable(logid,favourable_id,corp_id,corp_name,favourable_type,site_id,product_id,product_name,bar_code,favourable_stime,favourable_etime,favourable_price,nomarl_price,favourable_title,nomarl_title,favourable_url,nomarl_url,favourable_desc,cur_state,create_time)
+		VALUES(#{logid},#{favourable_id},#{corp_id},#{corp_name},#{favourable_type},#{site_id},#{product_id},#{product_name},#{bar_code},#{favourable_stime},#{favourable_etime},#{favourable_price},#{nomarl_price},#{favourable_title},#{nomarl_title},#{favourable_url},#{nomarl_url},#{favourable_desc},#{cur_state},#{create_time});
+	</insert>
+	
+	<delete id="delete">
+		delete from as_product_favourable where logid=#{logid}
+	</delete>
+	
+	<update id="update">
+		update as_product_favourable set
+		corp_id=#{corp_id},corp_name=#{corp_name},product_id=#{product_id}, product_name=#{product_name},bar_code=#{bar_code},favourable_stime=#{favourable_stime},favourable_etime=#{favourable_etime},favourable_price=#{favourable_price},nomarl_price=#{nomarl_price},favourable_title=#{favourable_title},nomarl_title=#{nomarl_title},favourable_url=#{favourable_url},nomarl_url=#{nomarl_url},favourable_desc=#{favourable_desc},cur_state=#{cur_state},favourable_type=#{favourable_type},site_id=#{site_id}
+		where logid =#{logid}
+	</update>
+	
+ </mapper> 
+ 	

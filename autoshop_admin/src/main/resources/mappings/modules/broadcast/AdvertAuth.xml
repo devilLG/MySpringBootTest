@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhilai.master.modules.broadcast.dao.AdvertAuthDao">
+	
+	<select id="get" resultType="AdvertAuth">
+		SELECT 
+			* 
+		FROM as_advert_auth 
+		WHERE logid = #{logid}
+	</select>
+	
+	<select id="findList" resultType="AdvertAuth">
+		SELECT 
+			* 
+		FROM as_advert_auth  
+		WHERE 1=1
+		<if test="targetId != null and targetId != ''">
+			AND target_id = #{targetId} 
+		</if>
+		<if test="configId != null and configId != ''">
+			AND config_id = #{configId} 
+		</if>
+		ORDER BY state_time DESC ,create_time  DESC
+	</select>
+	
+
+ 	<insert id="insert">
+		INSERT INTO as_advert_auth(
+			logid,
+			auth_id,
+			target_id, 
+			target_name, 
+			target_type, 
+			config_id, 
+			config_name,
+			plan_stime,
+			plan_etime,
+			cur_state,
+			state_time,
+			create_time
+		) VALUES (
+			#{logid},
+			#{authId},
+			#{targetId}, 
+			#{targetName},
+			#{targetType}, 
+			#{configId},
+			#{configName},
+			#{planStime},
+			#{planEtime},
+			#{curState},
+			#{stateTime},
+			#{createTime}
+		)
+	</insert>
+	
+ 
+ 	<update id="update">
+		update as_advert_auth set 
+		config_id=#{configId},
+		config_name=#{configName},
+		plan_stime=#{planStime},
+		plan_etime=#{planEtime},
+		cur_state=#{curState},
+		state_time=#{stateTime}
+		where logid=#{logid}
+	</update>
+		
+		
+
+	
+ 	<delete id="delete">
+		delete from as_advert_auth where logid=#{logid}
+	</delete> 
+</mapper>

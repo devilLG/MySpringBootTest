@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="autoshop_admin"
+  id="myeclipse.1503647989315"
+  context-root="/autoshop_admin"
+  j2ee-spec="6.0"
+  archive="autoshop_admin.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/wepapp" />
+  </attributes>
+</project-module>
+
