@@ -1,1 +1,0 @@
-package com.zhilai.master.modules.pay.dao;	import com.zhilai.master.common.persistence.CrudDao;import com.zhilai.master.common.persistence.annotation.MyBatisDao;import com.zhilai.master.modules.pay.entity.PayResult;	@MyBatisDaopublic interface PayResultDao extends CrudDao<PayResult> {	}

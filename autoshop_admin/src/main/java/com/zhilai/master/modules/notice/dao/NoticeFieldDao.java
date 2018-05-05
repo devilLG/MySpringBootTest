@@ -1,1 +1,0 @@
-package com.zhilai.master.modules.notice.dao;	import com.zhilai.master.common.persistence.CrudDao;import com.zhilai.master.common.persistence.annotation.MyBatisDao;import com.zhilai.master.modules.notice.entity.NoticeField;	@MyBatisDaopublic interface NoticeFieldDao extends CrudDao<NoticeField> {	NoticeField findOneByCode(String field_code);	}
