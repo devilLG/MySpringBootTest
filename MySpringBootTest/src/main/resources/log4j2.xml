@@ -10,7 +10,7 @@
         </Console>
     </appenders>
     <loggers>
-        <logger name="com.light.springboot" level="debug" />
+        <logger name="com.light.springboot" level="DEBUG" />
         <root level="info">
             <appenderref ref="CONSOLE" />
         </root>
