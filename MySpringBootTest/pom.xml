@@ -53,6 +53,7 @@
           <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
+        <!-- 测试环境 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -64,12 +65,32 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+        
+        <!-- 热部署，可以自动更新静态文件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional> <!-- 表示依赖不会传递 -->
+        </dependency>
 		
-		<!-- 加载freemarker模板 -->
+		<!-- 加载freemarker模板，使用ftl文件 -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
+		
+		<!-- 添加thymeleaf模板，使用html文件 -->
+		<!-- <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency> -->
+		
+		<!-- 阿里fastjson依赖 -->
+		<!-- <dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>fastjson</artifactId>
+		    <version>1.2.35</version>
+		</dependency> -->
 	</dependencies>
 
 	<build>
@@ -77,6 +98,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+		            <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+		        </configuration>
 			</plugin>
 		</plugins>
 	</build>
